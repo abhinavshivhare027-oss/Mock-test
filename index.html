@@ -1,1 +1,596 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Action Test Pro - Online Mock Test</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #fffaf4;
+  color: #28213b;
+  padding: 15px;
+}
+
+.container {
+  max-width: 750px;
+  margin: 20px auto;
+  background: white;
+  border: 1px solid #eadff3;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px #7042a71c;
+}
+
+header {
+  background: linear-gradient(115deg, #7042a7, #9a69c2);
+  color: white;
+  padding: 25px 18px;
+  text-align: center;
+}
+
+header small {
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+header h1 {
+  font-size: 27px;
+  margin: 10px 0;
+}
+
+.content {
+  padding: 20px;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 12px 5px;
+  border: 1px solid #eee5f4;
+  border-radius: 12px;
+}
+
+.stat b {
+  display: block;
+  font-size: 22px;
+  color: #7042a7;
+}
+
+.stat small {
+  font-size: 11px;
+  color: #777;
+}
+
+.progress {
+  height: 7px;
+  background: #eee7f3;
+  border-radius: 10px;
+  margin: 10px 0 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 10%;
+  background: linear-gradient(90deg, #9b70c6, #d5b36f);
+  transition: width .3s;
+}
+
+.question {
+  font-size: 19px;
+  font-weight: bold;
+  line-height: 1.5;
+  margin: 15px 0;
+}
+
+.options {
+  display: grid;
+  gap: 12px;
+}
+
+.option {
+  width: 100%;
+  text-align: left;
+  padding: 14px;
+  border: 1.5px solid #e8deef;
+  border-radius: 12px;
+  background: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.option:hover:not(:disabled) {
+  border-color: #7042a7;
+  background: #faf5ff;
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+/* सही उत्तर की हरी लाइट */
+.option.correct {
+  background: #eafff0;
+  border: 2px solid #16a34a;
+  color: #12632e;
+  box-shadow: 0 0 8px #22c55e,
+              0 0 20px #22c55e66;
+  animation: greenPulse .75s ease;
+}
+
+/* गलत उत्तर की लाल लाइट */
+.option.wrong {
+  background: #fff0f0;
+  border: 2px solid #ef4444;
+  color: #a51f1f;
+  box-shadow: 0 0 8px #ef4444,
+              0 0 20px #ef444466;
+  animation: redPulse .65s ease;
+}
+
+@keyframes greenPulse {
+  0%,100% {
+    box-shadow: 0 0 7px #22c55e;
+  }
+  50% {
+    box-shadow: 0 0 17px #22c55e,
+                0 0 28px #22c55e88;
+  }
+}
+
+@keyframes redPulse {
+  0%,100% {
+    box-shadow: 0 0 7px #ef4444;
+  }
+  50% {
+    box-shadow: 0 0 17px #ef4444,
+                0 0 28px #ef444488;
+  }
+}
+
+.feedback {
+  display: none;
+  margin-top: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.feedback.good {
+  display: block;
+  background: #eafff0;
+  border: 1px solid #9ee6b4;
+  color: #12632e;
+}
+
+.feedback.bad {
+  display: block;
+  background: #fff0f0;
+  border: 1px solid #ffc0c0;
+  color: #9f2222;
+}
+
+.feedback strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.next, .restart {
+  padding: 13px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.next {
+  background: #7042a7;
+  color: white;
+  flex: 1;
+}
+
+.restart {
+  background: #f0e8f6;
+  color: #7042a7;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.result {
+  display: none;
+  text-align: center;
+  padding: 30px 15px;
+}
+
+.result h2 {
+  color: #7042a7;
+}
+
+.final-score {
+  font-size: 55px;
+  font-weight: bold;
+  color: #7042a7;
+  margin: 15px;
+}
+
+.result p {
+  margin: 12px 0;
+  color: #6e6477;
+}
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #978da0;
+  padding: 15px;
+}
+
+@media(max-width:480px) {
+  .question {
+    font-size: 17px;
+  }
+  header h1 {
+    font-size: 23px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <small>SMART LEARNING • INSTANT FEEDBACK</small>
+  <h1>ACTION TEST PRO</h1>
+  <p>Practice • Answer • Improve</p>
+</header>
+
+<div class="content" id="quiz">
+
+  <div class="stats">
+    <div class="stat">
+      <b id="count">1/10</b>
+      <small>QUESTION</small>
+    </div>
+
+    <div class="stat">
+      <b id="score">0</b>
+      <small>SCORE</small>
+    </div>
+
+    <div class="stat">
+      <b id="accuracy">—</b>
+      <small>ACCURACY</small>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;font-size:12px;color:#806a91;font-weight:bold">
+    <span id="subject">HISTORY</span>
+    <span id="progressText">10% COMPLETED</span>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="question" id="question"></div>
+
+  <div class="options" id="options"></div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <div class="actions">
+    <button class="restart" onclick="restartTest()">↻ Restart</button>
+    <button class="next" id="nextBtn" onclick="nextQuestion()" disabled>
+      Next Question →
+    </button>
+  </div>
+
+</div>
+
+<div class="result" id="result">
+  <h2>TEST COMPLETED!</h2>
+  <div class="final-score" id="finalScore">0/10</div>
+  <p id="message"></p>
+  <p id="breakdown"></p>
+  <button class="next" onclick="restartTest()">↻ Play Again</button>
+</div>
+
+<footer>ACTION TEST PRO • Online Mock Test</footer>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+subject:"HISTORY",
+q:"सिंधु घाटी सभ्यता का प्रमुख बंदरगाह कौन-सा था?",
+options:["हड़प्पा","लोथल","मोहनजोदड़ो","कालीबंगा"],
+answer:1,
+explanation:"लोथल गुजरात में स्थित था और इसे सिंधु घाटी सभ्यता का प्रमुख बंदरगाह माना जाता है।"
+},
+
+{
+subject:"GEOGRAPHY",
+q:"भारत की सबसे लंबी नदी कौन-सी है?",
+options:["गोदावरी","यमुना","गंगा","नर्मदा"],
+answer:2,
+explanation:"भारत में बहने वाली सबसे लंबी नदी गंगा है।"
+},
+
+{
+subject:"POLITY",
+q:"भारतीय संविधान कब लागू हुआ?",
+options:["15 अगस्त 1947","26 जनवरी 1950","26 नवंबर 1949","2 अक्टूबर 1950"],
+answer:1,
+explanation:"भारतीय संविधान 26 जनवरी 1950 को लागू हुआ।"
+},
+
+{
+subject:"SCIENCE",
+q:"मानव शरीर में रक्त को छानने का मुख्य कार्य कौन करता है?",
+options:["हृदय","फेफड़े","गुर्दे","यकृत"],
+answer:2,
+explanation:"गुर्दे रक्त से अपशिष्ट पदार्थों को छानने का कार्य करते हैं।"
+},
+
+{
+subject:"HISTORY",
+q:"भारत छोड़ो आंदोलन किस वर्ष शुरू हुआ?",
+options:["1930","1942","1947","1920"],
+answer:1,
+explanation:"भारत छोड़ो आंदोलन 8 अगस्त 1942 को शुरू हुआ।"
+},
+
+{
+subject:"GEOGRAPHY",
+q:"क्षेत्रफल की दृष्टि से भारत का सबसे बड़ा राज्य कौन-सा है?",
+options:["उत्तर प्रदेश","मध्य प्रदेश","राजस्थान","महाराष्ट्र"],
+answer:2,
+explanation:"राजस्थान क्षेत्रफल की दृष्टि से भारत का सबसे बड़ा राज्य है।"
+},
+
+{
+subject:"POLITY",
+q:"भारतीय संविधान की प्रारूप समिति के अध्यक्ष कौन थे?",
+options:["डॉ. राजेंद्र प्रसाद","डॉ. बी. आर. आंबेडकर","जवाहरलाल नेहरू","सरदार पटेल"],
+answer:1,
+explanation:"डॉ. भीमराव आंबेडकर संविधान की प्रारूप समिति के अध्यक्ष थे।"
+},
+
+{
+subject:"SCIENCE",
+q:"पानी का रासायनिक सूत्र क्या है?",
+options:["CO₂","O₂","H₂O","NaCl"],
+answer:2,
+explanation:"पानी का रासायनिक सूत्र H₂O है।"
+},
+
+{
+subject:"HISTORY",
+q:"भारत के प्रथम राष्ट्रपति कौन थे?",
+options:["डॉ. राजेंद्र प्रसाद","डॉ. राधाकृष्णन","जवाहरलाल नेहरू","जाकिर हुसैन"],
+answer:0,
+explanation:"डॉ. राजेंद्र प्रसाद भारत के प्रथम राष्ट्रपति थे।"
+},
+
+{
+subject:"GEOGRAPHY",
+q:"कर्क रेखा भारत के कितने राज्यों से गुजरती है?",
+options:["6","7","8","9"],
+answer:2,
+explanation:"कर्क रेखा भारत के 8 राज्यों से होकर गुजरती है।"
+}
+
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function showQuestion() {
+
+  answered = false;
+
+  const q = questions[current];
+
+  document.getElementById("count").innerText =
+    (current + 1) + "/10";
+
+  document.getElementById("score").innerText = score;
+
+  document.getElementById("accuracy").innerText =
+    current === 0 ? "—" :
+    Math.round(score / current * 100) + "%";
+
+  document.getElementById("subject").innerText = q.subject;
+
+  document.getElementById("progressText").innerText =
+    Math.round((current + 1) / 10 * 100) + "% COMPLETED";
+
+  document.getElementById("progressBar").style.width =
+    ((current + 1) / 10 * 100) + "%";
+
+  document.getElementById("question").innerText =
+    (current + 1) + ". " + q.q;
+
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+
+  document.getElementById("nextBtn").disabled = true;
+
+  const options = document.getElementById("options");
+  options.innerHTML = "";
+
+  q.options.forEach((option, index) => {
+
+    const button = document.createElement("button");
+    button.className = "option";
+
+    button.innerText =
+      String.fromCharCode(65 + index) + ". " + option;
+
+    button.onclick = () => checkAnswer(index);
+
+    options.appendChild(button);
+
+  });
+
+}
+
+function checkAnswer(selected) {
+
+  if (answered) return;
+
+  answered = true;
+
+  const q = questions[current];
+
+  const buttons = document.querySelectorAll(".option");
+
+  buttons.forEach((button, index) => {
+
+    button.disabled = true;
+
+    if (index === q.answer) {
+      button.classList.add("correct");
+    }
+
+    if (index === selected && selected !== q.answer) {
+      button.classList.add("wrong");
+    }
+
+  });
+
+  const feedback = document.getElementById("feedback");
+
+  if (selected === q.answer) {
+
+    score++;
+
+    feedback.className = "feedback good";
+
+    feedback.innerHTML =
+      "<strong>✓ सही जवाब! शानदार!</strong>" +
+      q.explanation;
+
+  } else {
+
+    feedback.className = "feedback bad";
+
+    feedback.innerHTML =
+      "<strong>✕ गलत जवाब!</strong>" +
+      "सही उत्तर: <b>" + q.options[q.answer] +
+      "</b><br>" + q.explanation;
+
+  }
+
+  document.getElementById("score").innerText = score;
+
+  document.getElementById("accuracy").innerText =
+    Math.round(score / (current + 1) * 100) + "%";
+
+  document.getElementById("nextBtn").disabled = false;
+
+}
+
+function nextQuestion() {
+
+  if (!answered) return;
+
+  current++;
+
+  if (current < questions.length) {
+
+    showQuestion();
+
+  } else {
+
+    showResult();
+
+  }
+
+}
+
+function showResult() {
+
+  document.getElementById("quiz").style.display = "none";
+
+  document.getElementById("result").style.display = "block";
+
+  document.getElementById("finalScore").innerText =
+    score + "/10";
+
+  let message = "";
+
+  if (score >= 8) {
+    message = "बहुत शानदार! आपकी तैयारी अच्छी है।";
+  } else if (score >= 5) {
+    message = "अच्छा प्रयास! अभ्यास जारी रखें।";
+  } else {
+    message = "अभ्यास करते रहें, आप बेहतर कर सकते हैं।";
+  }
+
+  document.getElementById("message").innerText = message;
+
+  document.getElementById("breakdown").innerText =
+    "सही उत्तर: " + score +
+    " | गलत उत्तर: " + (10 - score) +
+    " | Accuracy: " + score * 10 + "%";
+
+}
+
+function restartTest() {
+
+  current = 0;
+  score = 0;
+  answered = false;
+
+  document.getElementById("quiz").style.display = "block";
+  document.getElementById("result").style.display = "none";
+
+  showQuestion();
+
+}
+
+showQuestion();
+
+</script>
+
+</body>
+  </html>
+
